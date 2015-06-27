@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+
+    <TabHost xmlns:android='http://schemas.android.com/apk/res/android'
+        android:id='@android:id/tabhost'
+        android:layout_width='fill_parent'
+        android:layout_height='fill_parent'
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true">
+        <RelativeLayout
+            android:orientation='vertical'
+            android:layout_width='fill_parent'
+            android:layout_height='fill_parent'
+            android:paddingTop='5dip'>
+            <TabWidget
+                android:id='@android:id/tabs'
+                android:layout_width='fill_parent'
+                android:layout_height='wrap_content'
+                android:layout_alignBottom='@android:id/tabcontent' />
+            <FrameLayout
+                android:id='@android:id/tabcontent'
+                android:layout_width='fill_parent'
+                android:layout_height='fill_parent'
+                android:layout_alignParentTop="true">
+            </FrameLayout>
+        </RelativeLayout>
+    </TabHost>
+
+</RelativeLayout>
+
+

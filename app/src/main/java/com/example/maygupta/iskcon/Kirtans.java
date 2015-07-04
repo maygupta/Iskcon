@@ -25,16 +25,16 @@ public class Kirtans extends Activity {
     ListView listView;
     Download mDownload;
     KirtanData currentKirtanData;
-    ProgressDialog progress;
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
 
-        progress = new ProgressDialog(this);
+        mProgress = new ProgressDialog(this);
         mDownload = new Download(this);
-        mDownload.setProgress(progress);
+        mDownload.setProgress(mProgress);
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -42,18 +42,20 @@ public class Kirtans extends Activity {
         ArrayList<KirtanData> data = new ArrayList<KirtanData>();
 
         // Defined Array values to show in ListView
+        // http://harekrishnasongs.com/tag/hare-krishna-tunes/
         String[][] values = {
                 {"HH Loknath Swami Guru Puja", "http://lokanathswamikirtans.com/kirtans/2015/April/Day_1_Mauritius_kirtan_mela_10_4_15_HH_LNS.MP3"},
                 {"Mangal Arti", "http://lokanathswamikirtans.com/kirtans/2015/12_feb_mayapur_eve.mp3"},
                 {"Gaur Arti","http://lokanathswamikirtans.com/kirtans/Mukund_das/Bhaja_gauranga.mp3"},
                 {"Narsimha Arti","http://lokanathswamikirtans.com/kirtans/2014/Oct/Damodarastakam%20by%20Guru%20maharaj.mp3"},
                 {"HH BBGS yashomati Nandan","http://www.mayapur.com/download/Kirtans/2008-07-07_rathayatra.festival.kirtan_kgp.mp3"},
-                {"HH Loknath Swami Hare Krishna","http://www.mayapur.com/download/Kirtans/2008-11-01_sp-guru-pooja_ynp.mp3"},
+                {"HH Bhakti Charu Swami","http://harekrishnasongs.com/wp-content/audio/Bhakti_Charu_Swami/Hare_Krishna_Kirtans/BCS_Bhajans_-_Harinaam_Sankirtan_-_2008-10-28_Mayapur.mp3"},
                 {"Ohe Vaishanva Thakur","http://www.mayapur.com/download/Kirtans/2008-07-17_ohe!.vaisnava.thakura_jgmp.mp3"},
-                {"HH BBGS Damodarashtakam","http://www.mayapur.com/download/Kirtans/2007-12-03_damodaraastakam_rns.mp3"},
-                {"SP Guru puja","http://www.mayapur.com/download/Kirtans/2008-11-01_sp-guru-pooja_ynp.mp3"},
-                {"Sri narasimha prayers", "http://www.mayapur.com/download/Kirtans/2008-12-31_sri-narasimha-prayer.mp3"},
-                {"Sp vyasapooja song","http://www.mayapur.com/download/Kirtans/2009-08-11_sp-vyasapooja-song2_mhp.mp3"}
+                {"SP Hare Krishna","http://www.iskconct.org/mp3/sp/Hare%20Krishna%20Kirtan.mp3"},
+                {"HH Bhakti Charu Swami","http://harekrishnasongs.com/wp-content/audio/Bhakti_Charu_Swami/Hare_Krishna_Kirtans/14_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Charu_Sw_Punjabi_Baugh.mp3"},
+                {"HH BBGS Hare Krishna", "http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/07_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Bringa_Govinda_Sw_Punjabi_Baugh.mp3"},
+                {"HH BBGS Hare Krishna fav tune","http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/16_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Bringa_Govinda_Sw_Punjabi_Baugh.mp3"},
+                {"HH BBGS SVD Kirtana", "http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/BBGS_Bhajans_-_Hare_Krishna_Kirtan_-_2011-12-16_Vrindavan.MP3"}
         };
 
 
@@ -93,20 +95,18 @@ public class Kirtans extends Activity {
                     play(currentKirtanData.getmName(), (String) view.getTag());
                 }
 
-
-
             }
 
         });
     }
 
     protected void showProgress() {
-        progress.setMessage("Downloading...");
-        progress.show();
+        mProgress.setMessage("Downloading...");
+        mProgress.show();
     }
 
     protected void hideProgress() {
-        progress.dismiss();
+        mProgress.dismiss();
     }
 
     private void play(String name, String url) {
@@ -173,10 +173,16 @@ public class Kirtans extends Activity {
                 // Close streams
                 output.close();
                 input.close();
+                hideProgress();
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
             }
             return null;
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            mProgress.setProgress(Integer.parseInt(progress[0]));
         }
 
         // Once Music File is downloaded

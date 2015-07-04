@@ -8,7 +8,7 @@
     >
 
     <TextView
-        android:layout_weight="0.8"
+        android:layout_weight="0.85"
         android:id="@+id/song_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,20 +20,28 @@
     <ImageView
         android:id="@+id/play_icon"
         android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_weight="0.2"
+        android:layout_height="25dp"
+        android:layout_weight="0.1"
         android:src="@drawable/play"
-
+        android:visibility="gone"
         />
 
     <ImageView
         android:id="@+id/pause_icon"
         android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_weight="0.2"
+        android:layout_height="25dp"
+        android:layout_weight="0.1"
         android:src="@drawable/pause"
         android:visibility="gone"
 
         />
+    <ImageView
+        android:id="@+id/download_icon"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_weight="0.1"
+        android:src="@drawable/download"
+        />
+
 
 </LinearLayout>

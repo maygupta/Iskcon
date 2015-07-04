@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -16,11 +17,13 @@ public class MyArrayAdapter extends ArrayAdapter<KirtanData> {
 
     private final Context context;
     private final ArrayList<KirtanData> values;
+    private File mDir;
 
-    public MyArrayAdapter(Context context, ArrayList<KirtanData> data) {
+    public MyArrayAdapter(Context context, ArrayList<KirtanData> data, File dir) {
         super(context, -1, data);
         this.context = context;
         this.values = data;
+        mDir = dir;
     }
 
 
@@ -35,6 +38,14 @@ public class MyArrayAdapter extends ArrayAdapter<KirtanData> {
         textView.setText(values.get(position).getmName());
 
         rowView.setTag(values.get(position).getmUrl());
+
+        File file = new File(mDir+"/iskcon/"+ values.get(position).getmName());
+
+        // Check if the Music file already exists
+        if (file.exists()) {
+            rowView.findViewById(R.id.download_icon).setVisibility(View.GONE);
+            rowView.findViewById(R.id.play_icon).setVisibility(View.VISIBLE);
+        }
 
         return rowView;
 

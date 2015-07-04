@@ -1,5 +1,6 @@
 package com.example.maygupta.iskcon;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,6 +17,12 @@ public class Download {
     private MediaPlayer mPlayer;
 
     private Context mContext;
+
+    public void setProgress(ProgressDialog progress) {
+        this.progress = progress;
+    }
+
+    private ProgressDialog progress;
 
     public void setCurrentView(View currentView) {
         this.currentView = currentView;
@@ -70,6 +77,7 @@ public class Download {
         Uri myUri1 = Uri.fromFile(file);
         mPlayer  = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        (currentView.findViewById(R.id.download_icon)).setVisibility(View.GONE);
         (currentView.findViewById(R.id.play_icon)).setVisibility(View.GONE);
         (currentView.findViewById(R.id.pause_icon)).setVisibility(View.VISIBLE);
         try {
@@ -77,10 +85,8 @@ public class Download {
             mPlayer.prepare();
             // Start playing the Music file
             mPlayer.start();
-
             mPlayer.setOnCompletionListener(new OnCompletionListener() {
                 public void onCompletion(MediaPlayer mp) {
-                    Toast.makeText(mContext, "Music completed playing",Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IllegalArgumentException e) {

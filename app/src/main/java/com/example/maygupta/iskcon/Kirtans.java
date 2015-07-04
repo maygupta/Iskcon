@@ -1,6 +1,7 @@
 package com.example.maygupta.iskcon;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -25,13 +25,16 @@ public class Kirtans extends Activity {
     ListView listView;
     Download mDownload;
     KirtanData currentKirtanData;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
 
+        progress = new ProgressDialog(this);
         mDownload = new Download(this);
+        mDownload.setProgress(progress);
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -39,26 +42,26 @@ public class Kirtans extends Activity {
         ArrayList<KirtanData> data = new ArrayList<KirtanData>();
 
         // Defined Array values to show in ListView
-        String[] values = new String[] {
-                "HH BBGS Hare Kirshna kirtan",
-                "HH Loknath Swami Guru Puja",
-                "Mangal Arti",
-                "Gaur Arti",
-                "Narsimha Arti",
-                "HH BBGS yashomati Nandan",
-                "HH Loknath Swami Hare Krishna",
-                "HH BBGS Hare Krishna melody",
-                "HH BBGS Damodarashtakam",
-                "HH BBGS Guru puja",
-                "HH BBGS Guru puja",
-                "HH BBGS Guru puja",
+        String[][] values = {
+                {"HH Loknath Swami Guru Puja", "http://lokanathswamikirtans.com/kirtans/2015/April/Day_1_Mauritius_kirtan_mela_10_4_15_HH_LNS.MP3"},
+                {"Mangal Arti", "http://lokanathswamikirtans.com/kirtans/2015/12_feb_mayapur_eve.mp3"},
+                {"Gaur Arti","http://lokanathswamikirtans.com/kirtans/Mukund_das/Bhaja_gauranga.mp3"},
+                {"Narsimha Arti","http://lokanathswamikirtans.com/kirtans/2014/Oct/Damodarastakam%20by%20Guru%20maharaj.mp3"},
+                {"HH BBGS yashomati Nandan","http://www.mayapur.com/download/Kirtans/2008-07-07_rathayatra.festival.kirtan_kgp.mp3"},
+                {"HH Loknath Swami Hare Krishna","http://www.mayapur.com/download/Kirtans/2008-11-01_sp-guru-pooja_ynp.mp3"},
+                {"Ohe Vaishanva Thakur","http://www.mayapur.com/download/Kirtans/2008-07-17_ohe!.vaisnava.thakura_jgmp.mp3"},
+                {"HH BBGS Damodarashtakam","http://www.mayapur.com/download/Kirtans/2007-12-03_damodaraastakam_rns.mp3"},
+                {"SP Guru puja","http://www.mayapur.com/download/Kirtans/2008-11-01_sp-guru-pooja_ynp.mp3"},
+                {"Sri narasimha prayers", "http://www.mayapur.com/download/Kirtans/2008-12-31_sri-narasimha-prayer.mp3"},
+                {"Sp vyasapooja song","http://www.mayapur.com/download/Kirtans/2009-08-11_sp-vyasapooja-song2_mhp.mp3"}
         };
 
-        for (String val:values) {
-            data.add(new KirtanData(val,"http://audio.iskcondesiretree.com/06_-_More/10_-_Bhajans_and_Kirtans_-_Categories/Bhajans_by_A_C_Bhaktivedanta_Swami_Prabhupada/Boro_Krpa_Koile_Krsna/Boro_Krpa_Koile_Krsna_-_Sung_by_HG_Ganga_Narayana_Prabhu_IDT.mp3"));
+
+        for (String[] val:values) {
+            data.add(new KirtanData(val[0],val[1]));
         }
 
-        ArrayAdapter<KirtanData> kirtanAdapter=new MyArrayAdapter(this,data);
+        ArrayAdapter<KirtanData> kirtanAdapter=new MyArrayAdapter(this,data, this.getFilesDir());
 
         // Assign adapter to ListView
         listView.setAdapter(kirtanAdapter);
@@ -77,11 +80,6 @@ public class Kirtans extends Activity {
                 currentKirtanData    = (KirtanData) listView.getItemAtPosition(position);
 
                 String myTag=(String)view.getTag();
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + currentKirtanData.getmName(), Toast.LENGTH_LONG)
-                        .show();
 
                 if (view == mDownload.getCurrentView()){
                     if ( mDownload.isPlaying() ) {
@@ -102,17 +100,24 @@ public class Kirtans extends Activity {
         });
     }
 
+    protected void showProgress() {
+        progress.setMessage("Downloading...");
+        progress.show();
+    }
+
+    protected void hideProgress() {
+        progress.dismiss();
+    }
+
     private void play(String name, String url) {
 
         File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ name);
         // Check if the Music file already exists
         if (file.exists()) {
-            Toast.makeText(getApplicationContext(), "File already exist under SD card, playing Music", Toast.LENGTH_LONG).show();
             // Play Music
             mDownload.playMusic(file);
             // If the Music File doesn't exist in SD card (Not yet downloaded)
         } else {
-            Toast.makeText(getApplicationContext(), "File doesn't exist under SD Card, downloading Mp3 from Internet", Toast.LENGTH_LONG).show();
             // Trigger Async Task (onPreExecute method)
             new DownloadMusicfromInternet().execute(name,url);
         }
@@ -123,9 +128,8 @@ public class Kirtans extends Activity {
         // Show Progress bar before downloading Music
         @Override
         protected void onPreExecute() {
+            showProgress();
             super.onPreExecute();
-            // Shows Progress Bar Dialog and then call doInBackground method
-//            showDialog(progress_bar_type);
         }
 
         // Download Music File from Internet
@@ -133,6 +137,7 @@ public class Kirtans extends Activity {
         protected String doInBackground(String... f_url) {
             int count;
             try {
+
                 URL url = new URL(f_url[1]);
                 URLConnection conection = url.openConnection();
                 conection.connect();
@@ -177,7 +182,7 @@ public class Kirtans extends Activity {
         // Once Music File is downloaded
         @Override
         protected void onPostExecute(String file_url) {
-            Toast.makeText(Kirtans.this, "Download complete, playing Music", Toast.LENGTH_LONG).show();
+            hideProgress();
             File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
             mDownload.playMusic(file);
         }

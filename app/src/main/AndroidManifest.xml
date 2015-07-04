@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.maygupta.iskcon" >
+    <uses-permission android:name="androd.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -25,12 +26,19 @@
             android:label="@string/title_activity_lectures" >
         </activity>
         <activity
+            android:name=".Download"
+            android:label="Download" >
+        </activity>
+        <activity
             android:name=".Darshans"
             android:label="@string/title_activity_darshans" >
         </activity>
-        <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDcGAYUDe6RPJTTPn1L69UEC7S8s2PIkPk"/>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -12,10 +12,13 @@ import android.widget.Toast;
 public class Kirtans extends Activity {
 
     ListView listView;
+    Download mDownload;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
+
+        mDownload = new Download();
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -35,12 +38,6 @@ public class Kirtans extends Activity {
                 "HH BBGS Guru puja",
                 "HH BBGS Guru puja",
         };
-
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
@@ -66,6 +63,7 @@ public class Kirtans extends Activity {
                 Toast.makeText(getApplicationContext(),
                         "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
                         .show();
+//                mDownload.startDownload();
 
             }
 

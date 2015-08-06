@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.maygupta.iskcon" >
     <uses-permission android:name="androd.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +19,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,8 +48,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDcGAYUDe6RPJTTPn1L69UEC7S8s2PIkPk"/>
-    </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    </application>
 
 </manifest>

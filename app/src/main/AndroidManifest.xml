@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.maygupta.iskcon" >
+    package="com.iskcon.pb" >
     <uses-permission android:name="androd.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -13,7 +13,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name="SplashScreen"
+            android:name="com.iskcon.pb.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -25,23 +25,23 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.iskcon.pb.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Kirtans"
+            android:name="com.iskcon.pb.Kirtans"
             android:label="@string/title_activity_kirtans" >
         </activity>
         <activity
-            android:name=".Lectures"
+            android:name="com.iskcon.pb.Lectures"
             android:label="@string/title_activity_lectures" >
         </activity>
         <activity
-            android:name=".Download"
+            android:name="com.iskcon.pb.Download"
             android:label="Download" >
         </activity>
         <activity
-            android:name=".Darshans"
+            android:name="com.iskcon.pb.Darshans"
             android:label="@string/title_activity_darshans" >
         </activity>
 

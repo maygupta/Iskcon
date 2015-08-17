@@ -33,6 +33,9 @@ public class Kirtans extends Activity {
         setContentView(R.layout.activity_list_view_android_example);
 
         mProgress = new ProgressDialog(this);
+        mProgress.setMessage("Downloading Kirtan !!");
+        mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
         mDownload = new Download(this);
         mDownload.setProgress(mProgress);
 
@@ -101,7 +104,6 @@ public class Kirtans extends Activity {
     }
 
     protected void showProgress() {
-        mProgress.setMessage("Downloading...");
         mProgress.show();
     }
 
@@ -163,7 +165,8 @@ public class Kirtans extends Activity {
                 while ((count = input.read(data)) != -1) {
                     total += count;
                     // Publish the progress which triggers onProgressUpdate method
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    int progressPercentage = (int) ((total * 100) / lenghtOfFile);
+                    mProgress.setProgress(progressPercentage);
 
                     // Write data to file
                     output.write(data, 0, count);
@@ -189,8 +192,6 @@ public class Kirtans extends Activity {
         @Override
         protected void onPostExecute(String file_url) {
             hideProgress();
-            File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
-            mDownload.playMusic(file);
         }
     }
 

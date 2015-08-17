@@ -25,15 +25,20 @@ public class Lectures extends Activity {
     ListView listView;
     Download mDownload;
     KirtanData currentKirtanData;
-    ProgressDialog progress;
+    ProgressDialog mProgressDialog;
+    DownloadMusicfromInternet mDownloadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
 
-        progress = new ProgressDialog(this);
         mDownload = new Download(this);
+        mDownloadTask = new DownloadMusicfromInternet();
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Downloading Lecture !!");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -91,20 +96,17 @@ public class Lectures extends Activity {
                     play(currentKirtanData.getmName(), (String) view.getTag());
                 }
 
-
-
             }
 
         });
     }
 
     protected void showProgress() {
-        progress.setMessage("Downloading...");
-        progress.show();
+        mProgressDialog.show();
     }
 
     protected void hideProgress() {
-        progress.dismiss();
+        mProgressDialog.dismiss();
     }
 
     private void play(String name, String url) {
@@ -117,7 +119,7 @@ public class Lectures extends Activity {
             // If the Music File doesn't exist in SD card (Not yet downloaded)
         } else {
             // Trigger Async Task (onPreExecute method)
-            new DownloadMusicfromInternet().execute(name,url);
+            mDownloadTask.execute(name,url);
         }
     }
 
@@ -129,6 +131,16 @@ public class Lectures extends Activity {
             showProgress();
             super.onPreExecute();
         }
+
+        /**
+         * Updating progress bar
+         * */
+        @Override
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
 
         // Download Music File from Internet
         @Override
@@ -160,7 +172,8 @@ public class Lectures extends Activity {
                 while ((count = input.read(data)) != -1) {
                     total += count;
                     // Publish the progress which triggers onProgressUpdate method
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    int progressPercentage = (int) ((total * 100) / lenghtOfFile);
+                    mProgressDialog.setProgress(progressPercentage);
 
                     // Write data to file
                     output.write(data, 0, count);
@@ -180,8 +193,6 @@ public class Lectures extends Activity {
         @Override
         protected void onPostExecute(String file_url) {
             hideProgress();
-            File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
-            mDownload.playMusic(file);
         }
     }
 

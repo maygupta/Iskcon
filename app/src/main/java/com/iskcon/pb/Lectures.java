@@ -2,6 +2,7 @@ package com.iskcon.pb;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -33,6 +38,21 @@ public class Lectures extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
 
+        Intent intent = getIntent();
+        String jsonStr = intent.getStringExtra("lectures");
+
+        ArrayList<KirtanData> data = new ArrayList<KirtanData>();
+
+        try {
+          JSONArray json = new JSONArray(jsonStr);
+            for(int i = 0; i < json.length(); i++) {
+                JSONObject row = json.getJSONObject(i);
+                data.add(new KirtanData(row.getString("name"), row.getString("url")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         mDownload = new Download(this);
         mDownloadTask = new DownloadMusicfromInternet();
 
@@ -42,27 +62,6 @@ public class Lectures extends Activity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-
-        ArrayList<KirtanData> data = new ArrayList<KirtanData>();
-
-        // Defined Array values to show in ListView
-        String[][] values = {
-                {"HG Rukmini Krishna Prabhu 7.14.23", "http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krshna%20P%204July%28S.B.7-14-23%29.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.14.08","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krsna%20P%2020June%20%28S.B.7_14-8%29.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.13.09","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P_25th%20APril2015_SB%207.13.19.mp3"},
-                {"HG Rukmini Krishna pr Gaur Purnima","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P_5th%20Feb2015_Gaur%20Purnima.mp3"},
-                {"HG Rukmini Krishna Pr 7.11.29","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P%2028%20feb%20%28S.B.%207-11.29%29.mp3"},
-                {"Varaha Dwadashi","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukimini%20Krishna%20P_31stJan2015_Varaha%20Dwadashi_SB%203.18.6.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.10.23","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P_SB%207.10.23_3rd%20Jan2015.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.10.18","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P_SB%207.10.18_27th%20Dec2014.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.10.09","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P_SB%207.10.9_13th%20Dec%202014.mp3"},
-                {"HG Rukmini Krishna Prabhu 7.10.01","http://www.iskconpunjabibagh.com/lectures/?download&file_name=HG%20Rukmini%20Krishna%20Prabhu%2FHG%20Rukmini%20Krishna%20P%20_29Nov_2014%20SB%207.10.1.mp3"}
-        };
-
-
-        for (String[] val:values) {
-            data.add(new KirtanData(val[0],val[1]));
-        }
 
         ArrayAdapter<KirtanData> kirtanAdapter=new MyArrayAdapter(this,data, this.getFilesDir());
 

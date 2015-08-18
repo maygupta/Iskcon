@@ -2,6 +2,7 @@ package com.iskcon.pb;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -32,6 +37,21 @@ public class Kirtans extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_android_example);
 
+        Intent intent = getIntent();
+        String jsonStr = intent.getStringExtra("kirtans");
+
+        ArrayList<KirtanData> data = new ArrayList<KirtanData>();
+
+        try {
+            JSONArray json = new JSONArray(jsonStr);
+            for(int i = 0; i < json.length(); i++) {
+                JSONObject row = json.getJSONObject(i);
+                data.add(new KirtanData(row.getString("name"), row.getString("url")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Downloading Kirtan !!");
         mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -41,30 +61,6 @@ public class Kirtans extends Activity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-
-        ArrayList<KirtanData> data = new ArrayList<KirtanData>();
-
-        // Defined Array values to show in ListView
-        // http://harekrishnasongs.com/tag/hare-krishna-tunes/
-        String[][] values = {
-                {"HH Loknath Swami Guru Puja", "http://lokanathswamikirtans.com/kirtans/2015/April/Day_1_Mauritius_kirtan_mela_10_4_15_HH_LNS.MP3"},
-                {"Mangal Arti", "http://lokanathswamikirtans.com/kirtans/2015/12_feb_mayapur_eve.mp3"},
-                {"Gaur Arti","http://lokanathswamikirtans.com/kirtans/Mukund_das/Bhaja_gauranga.mp3"},
-                {"Narsimha Arti","http://lokanathswamikirtans.com/kirtans/2014/Oct/Damodarastakam%20by%20Guru%20maharaj.mp3"},
-                {"HH BBGS yashomati Nandan","http://www.mayapur.com/download/Kirtans/2008-07-07_rathayatra.festival.kirtan_kgp.mp3"},
-                {"HH Bhakti Charu Swami","http://harekrishnasongs.com/wp-content/audio/Bhakti_Charu_Swami/Hare_Krishna_Kirtans/BCS_Bhajans_-_Harinaam_Sankirtan_-_2008-10-28_Mayapur.mp3"},
-                {"Ohe Vaishanva Thakur","http://www.mayapur.com/download/Kirtans/2008-07-17_ohe!.vaisnava.thakura_jgmp.mp3"},
-                {"SP Hare Krishna","http://www.iskconct.org/mp3/sp/Hare%20Krishna%20Kirtan.mp3"},
-                {"HH Bhakti Charu Swami","http://harekrishnasongs.com/wp-content/audio/Bhakti_Charu_Swami/Hare_Krishna_Kirtans/14_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Charu_Sw_Punjabi_Baugh.mp3"},
-                {"HH BBGS Hare Krishna", "http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/07_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Bringa_Govinda_Sw_Punjabi_Baugh.mp3"},
-                {"HH BBGS Hare Krishna fav tune","http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/16_Bhajans_-_Hare_Krishna_Kirtan_-_Bhakti_Bringa_Govinda_Sw_Punjabi_Baugh.mp3"},
-                {"HH BBGS SVD Kirtana", "http://harekrishnasongs.com/wp-content/audio/Bhakti_Bringa_Govinda_Swami/Hare_Krishna_Kirtans/BBGS_Bhajans_-_Hare_Krishna_Kirtan_-_2011-12-16_Vrindavan.MP3"}
-        };
-
-
-        for (String[] val:values) {
-            data.add(new KirtanData(val[0],val[1]));
-        }
 
         ArrayAdapter<KirtanData> kirtanAdapter=new MyArrayAdapter(this,data, this.getFilesDir());
 

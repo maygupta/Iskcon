@@ -29,9 +29,16 @@ public class MainActivity extends TabActivity {
     }
 
     private void setUpTabs() {
+
+        Intent data = getIntent();
+        String lectures = data.getStringExtra("lectures");
+        String kirtans = data.getStringExtra("kirtans");
+
         Resources res = getResources();
         Intent i = new Intent(this,Kirtans.class);
+        i.putExtra("kirtans", kirtans);
         Intent j = new Intent(this,Lectures.class);
+        j.putExtra("lectures", lectures);
         Intent k = new Intent(this,Darshans.class);
         mTabHst = getTabHost();
         mTabHst.addTab(mTabHst.newTabSpec("tab_1")

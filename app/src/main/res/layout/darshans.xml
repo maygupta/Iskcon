@@ -5,11 +5,24 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/imgLogo"
+    <!--<ImageView-->
+        <!--android:id="@+id/imgLogo"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="510dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/krishna_balram" />-->
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridview"
         android:layout_width="match_parent"
-        android:layout_height="510dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/krishna_balram" />
+        android:layout_height="454dp"
+        android:numColumns="auto_fit"
+        android:columnWidth="150dp"
+        android:verticalSpacing="10dp"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
+        android:layout_marginTop="30px"
+        android:layout_weight="0.22">
+    </GridView>
 
 </LinearLayout>

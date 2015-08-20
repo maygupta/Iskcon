@@ -1,23 +1,25 @@
 package com.iskcon.pb;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.IOException;
 
 public class Darshans  extends Activity
 {
-//    @Override
-//    public void onCreate(Bundle savedInstanceState)
-//    {
-//        super.onCreate(savedInstanceState);
-//
-//        setContentView(R.layout.darshans);
-//    }
+
+    private Animator mCurrentAnimator;
+    private int mShortAnimationDuration;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class Darshans  extends Activity
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
+            final ImageView imageView;
             if (convertView == null){
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
@@ -55,13 +57,27 @@ public class Darshans  extends Activity
 
             int loader = R.drawable.krishna_balram;
 
-            String imageUrl = mThumbIds[position];
+            final String imageUrl = mThumbIds[position];
 
             ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 
-            imageLoader.DisplayImage(imageUrl, loader, imageView);
+            imageLoader.DisplayImage(imageUrl, 0, imageView);
             imageView.getLayoutParams().height = 300;
             imageView.getLayoutParams().width = 300;
+
+            final String imageDescription = mDescriptions[position];
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        zoomImageFromThumb(imageView, imageUrl, imageDescription);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            });
 //            imageView.setImageResource(mThumbIds[position]);
             return imageView;
         }
@@ -82,5 +98,72 @@ public class Darshans  extends Activity
                 "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xfp1/t31.0-8/11885693_853383394738655_7439951516826857613_o.jpg"
 
         };
+
+        private String[] mDescriptions = {
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+                "Krishna Balram, 20th August 2015",
+
+        };
+
+
+        private void zoomImageFromThumb(final View thumbView, String imageUrl, String description) throws IOException {
+            // If there's an animation in progress, cancel it
+            // immediately and proceed with this one.
+            if (mCurrentAnimator != null) {
+                mCurrentAnimator.cancel();
+            }
+
+            // Load the high-resolution "zoomed-in" image.
+            final ImageView expandedImageView = (ImageView) findViewById(
+                    R.id.expanded_image);
+
+            ImageLoader imageLoader = new ImageLoader(getApplicationContext());
+
+            imageLoader.DisplayImage(imageUrl, 0, expandedImageView);
+
+            expandedImageView.getLayoutParams().height = 600;
+            expandedImageView.getLayoutParams().width = 800;
+
+            final Button backButton = (Button) findViewById(R.id.back_button);
+            final TextView textView = (TextView) findViewById(R.id.image_description);
+            textView.setText(description);
+
+            expandedImageView.setVisibility(View.VISIBLE);
+            final GridView gridView = (GridView) findViewById(R.id.gridview);
+            gridView.setVisibility(View.INVISIBLE);
+            backButton.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
+
+            backButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    expandedImageView.setVisibility(View.GONE);
+                    gridView.setVisibility(View.VISIBLE);
+                    backButton.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                }
+            });
+
+            expandedImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    expandedImageView.setVisibility(View.GONE);
+                    gridView.setVisibility(View.VISIBLE);
+                    backButton.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 }

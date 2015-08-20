@@ -5,10 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -31,6 +34,7 @@ public class Kirtans extends Activity {
     Download mDownload;
     KirtanData currentKirtanData;
     ProgressDialog mProgress;
+    ArrayAdapter<KirtanData> kirtanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,7 @@ public class Kirtans extends Activity {
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
 
-        ArrayAdapter<KirtanData> kirtanAdapter=new MyArrayAdapter(this,data, this.getFilesDir());
+        kirtanAdapter = new MyArrayAdapter(this,data, this.getFilesDir());
 
         // Assign adapter to ListView
         listView.setAdapter(kirtanAdapter);
@@ -97,6 +101,25 @@ public class Kirtans extends Activity {
             }
 
         });
+
+        EditText inputSearch = (EditText) findViewById(R.id.inputSearch);
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Kirtans.this.kirtanAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     protected void showProgress() {

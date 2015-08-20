@@ -29,4 +29,9 @@ public class KirtanData {
         this.mUrl = mUrl;
     }
 
+    @Override
+    public String toString() {
+        return mName;
+    }
+
 }

@@ -63,12 +63,14 @@ public class Download {
         }
     }
 
-    protected void resume() {
+    protected void resume(File file) {
         if ( mPlayer != null ) {
             (currentView.findViewById(R.id.play_icon)).setVisibility(View.GONE);
             (currentView.findViewById(R.id.pause_icon)).setVisibility(View.VISIBLE);
             mPlayer.seekTo(mPlayer.getCurrentPosition());
             mPlayer.start();
+        } else {
+            playMusic(file);
         }
     }
 
@@ -99,5 +101,11 @@ public class Download {
         } catch (IOException e) {
             Toast.makeText(mContext,	"IO Error occured",	Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void markDownloadComplete(File file) {
+        (currentView.findViewById(R.id.download_icon)).setVisibility(View.GONE);
+        (currentView.findViewById(R.id.play_icon)).setVisibility(View.VISIBLE);
+        (currentView.findViewById(R.id.pause_icon)).setVisibility(View.GONE);
     }
 }

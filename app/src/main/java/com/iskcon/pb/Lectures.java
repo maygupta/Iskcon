@@ -91,7 +91,8 @@ public class Lectures extends Activity {
                     if ( mDownload.isPlaying() ) {
                         mDownload.pause();
                     } else {
-                        mDownload.resume();
+                        File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+                        mDownload.resume(file);
                     }
                 } else {
                     mDownload.stopCurrentSong();
@@ -214,6 +215,8 @@ public class Lectures extends Activity {
         @Override
         protected void onPostExecute(String file_url) {
             hideProgress();
+            File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+            mDownload.markDownloadComplete(file);
         }
     }
 

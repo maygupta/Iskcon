@@ -90,7 +90,8 @@ public class Kirtans extends Activity {
                     if ( mDownload.isPlaying() ) {
                         mDownload.pause();
                     } else {
-                        mDownload.resume();
+                        File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+                        mDownload.resume(file);
                     }
                 } else {
                     mDownload.stopCurrentSong();
@@ -211,6 +212,9 @@ public class Kirtans extends Activity {
         @Override
         protected void onPostExecute(String file_url) {
             hideProgress();
+            File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+            mDownload.markDownloadComplete(file);
+
         }
     }
 

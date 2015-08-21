@@ -127,9 +127,6 @@ public class Darshans  extends Activity
 
             imageLoader.DisplayImage(imageUrl, 0, expandedImageView);
 
-            expandedImageView.getLayoutParams().height = 600;
-            expandedImageView.getLayoutParams().width = 800;
-
             final Button backButton = (Button) findViewById(R.id.back_button);
             final TextView textView = (TextView) findViewById(R.id.image_description);
             textView.setText(description);

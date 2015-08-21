@@ -33,6 +33,7 @@ public class MainActivity extends TabActivity {
         Intent data = getIntent();
         String lectures = data.getStringExtra("lectures");
         String kirtans = data.getStringExtra("kirtans");
+        String darshans = data.getStringExtra("darshans");
 
         Resources res = getResources();
         Intent i = new Intent(this,Kirtans.class);
@@ -40,6 +41,7 @@ public class MainActivity extends TabActivity {
         Intent j = new Intent(this,Lectures.class);
         j.putExtra("lectures", lectures);
         Intent k = new Intent(this,Darshans.class);
+        k.putExtra("darshans", darshans);
         mTabHst = getTabHost();
         mTabHst.addTab(mTabHst.newTabSpec("tab_1")
                 .setIndicator("Kirtans",res.getDrawable(R.drawable.kirtans))

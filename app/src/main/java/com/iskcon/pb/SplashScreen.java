@@ -14,6 +14,7 @@ public class SplashScreen extends Activity {
 
     String lectures;
     String kirtans;
+    String darshans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class SplashScreen extends Activity {
             JsonParser jsonParser = new JsonParser();
             lectures = jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/lectures/");
             kirtans= jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/kirtans/");
+            darshans = jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/images/");
             return null;
         }
 
@@ -45,6 +47,7 @@ public class SplashScreen extends Activity {
             Intent i = new Intent(SplashScreen.this, MainActivity.class);
             i.putExtra("lectures", lectures);
             i.putExtra("kirtans", kirtans);
+            i.putExtra("darshans", darshans);
             startActivity(i);
 
             finish();

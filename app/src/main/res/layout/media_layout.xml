@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    >
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/ivAuthorImage"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="10dip"
+        app:riv_border_width="0dip"
+        app:riv_mutate_background="true"
+        android:layout_marginLeft="5dp"
+        app:riv_oval="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/ivAuthorImage"
+        android:maxWidth="200dp"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tvSongType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:textSize="10sp"
+        android:layout_alignLeft="@+id/song_name"
+        android:layout_below="@+id/song_name"
+        />
+
+    <ImageView
+        android:id="@+id/play_icon"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:src="@drawable/play"
+        android:visibility="gone"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        />
+
+    <ImageView
+        android:id="@+id/pause_icon"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:src="@drawable/pause"
+        android:visibility="gone"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        />
+    <ImageView
+        android:id="@+id/download_icon"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:src="@drawable/download"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        />
+
+
+</RelativeLayout>

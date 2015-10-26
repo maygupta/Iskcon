@@ -51,7 +51,7 @@ public class Lectures extends Activity {
           JSONArray json = new JSONArray(jsonStr);
             for(int i = 0; i < json.length(); i++) {
                 JSONObject row = json.getJSONObject(i);
-                data.add(new KirtanData(row.getString("name"), row.getString("url")));
+                data.add(new KirtanData(row.getString("name"), row.getString("url"), row.getString("author")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class Lectures extends Activity {
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
 
-        kirtanAdapter = new MyArrayAdapter(this,data, this.getFilesDir());
+        kirtanAdapter = new MediaAdapter(this,data, this.getFilesDir());
 
         // Assign adapter to ListView
         listView.setAdapter(kirtanAdapter);

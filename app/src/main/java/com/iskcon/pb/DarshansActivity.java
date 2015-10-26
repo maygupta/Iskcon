@@ -1,6 +1,5 @@
 package com.iskcon.pb;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Darshans  extends Activity
+public class DarshansActivity  extends Activity
 {
 
     @Override

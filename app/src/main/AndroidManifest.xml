@@ -41,7 +41,7 @@
             android:label="Download" >
         </activity>
         <activity
-            android:name="com.iskcon.pb.Darshans"
+            android:name="com.iskcon.pb.DarshansActivity"
             android:label="@string/title_activity_darshans" >
         </activity>
 

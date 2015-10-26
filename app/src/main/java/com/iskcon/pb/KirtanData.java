@@ -5,12 +5,14 @@ package com.iskcon.pb;
  */
 public class KirtanData {
 
-    private String mName;
-    private String mUrl;
+    public String mName;
+    public String mUrl;
+    public String author;
 
-    KirtanData(String name,String url) {
+    KirtanData(String name,String url, String author) {
         this.mName = name;
         this.mUrl = url;
+        this.author = author;
     }
 
     public String getmName() {

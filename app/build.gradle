@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.iskcon.pb"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 6
         versionName "6.0"
@@ -35,4 +35,6 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     // Loading remote images from network into image view
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.makeramen:roundedimageview:2.2.1'
+    compile 'com.android.support:support-v4:23.1.0'
 }

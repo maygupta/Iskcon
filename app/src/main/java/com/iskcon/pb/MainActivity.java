@@ -40,9 +40,11 @@ public class MainActivity extends TabActivity {
         i.putExtra("kirtans", kirtans);
         Intent j = new Intent(this,Lectures.class);
         j.putExtra("lectures", lectures);
-        Intent k = new Intent(this,Darshans.class);
+        Intent k = new Intent(this,DarshansActivity.class);
         k.putExtra("darshans", darshans);
+
         mTabHst = getTabHost();
+
         mTabHst.addTab(mTabHst.newTabSpec("tab_1")
                 .setIndicator("Kirtans",res.getDrawable(R.drawable.kirtans))
                 .setContent(i));

@@ -95,7 +95,7 @@ public class Download {
         } catch (IllegalArgumentException e) {
             Toast.makeText(mContext, "You might not set the URI correctly!",	Toast.LENGTH_LONG).show();
         } catch (SecurityException e) {
-            Toast.makeText(mContext,	"URI cannot be accessed, permissed needed",	Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext,	"URI cannot be accessed, permission needed",	Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
             Toast.makeText(mContext,	"Media Player is not in correct state",	Toast.LENGTH_LONG).show();
         } catch (IOException e) {

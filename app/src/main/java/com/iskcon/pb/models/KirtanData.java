@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.models;
 
 /**
  * Created by maygupta on 7/4/15.
@@ -9,7 +9,7 @@ public class KirtanData {
     public String mUrl;
     public String author;
 
-    KirtanData(String name,String url, String author) {
+    public KirtanData(String name,String url, String author) {
         this.mName = name;
         this.mUrl = url;
         this.author = author;

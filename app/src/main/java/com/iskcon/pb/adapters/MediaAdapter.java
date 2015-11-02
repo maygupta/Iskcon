@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.iskcon.pb.R;
+import com.iskcon.pb.models.KirtanData;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 

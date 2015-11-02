@@ -13,7 +13,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name="com.iskcon.pb.SplashScreen"
+            android:name=".activities.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -25,23 +25,27 @@
         </activity>
 
         <activity
-            android:name="com.iskcon.pb.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.iskcon.pb.Kirtans"
+            android:name=".activities.Kirtans"
             android:label="@string/title_activity_kirtans" >
         </activity>
         <activity
-            android:name="com.iskcon.pb.Lectures"
+            android:name=".activities.Lectures"
             android:label="@string/title_activity_lectures" >
         </activity>
         <activity
-            android:name="com.iskcon.pb.Download"
+            android:name=".utils.Download"
             android:label="Download" >
         </activity>
         <activity
-            android:name="com.iskcon.pb.DarshansActivity"
+            android:name=".activities.DarshansActivity"
+            android:label="@string/title_activity_darshans" >
+        </activity>
+        <activity
+            android:name=".activities.FullDarshanDetailsActivity"
             android:label="@string/title_activity_darshans" >
         </activity>
 

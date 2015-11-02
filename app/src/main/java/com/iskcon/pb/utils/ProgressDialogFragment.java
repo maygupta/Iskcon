@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.utils;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

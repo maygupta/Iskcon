@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,6 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.iskcon.pb.utils.Download;
+import com.iskcon.pb.models.KirtanData;
+import com.iskcon.pb.adapters.MediaAdapter;
+import com.iskcon.pb.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,13 +33,12 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 
-public class Lectures extends Activity {
+public class Kirtans extends Activity {
 
     ListView listView;
     Download mDownload;
     KirtanData currentKirtanData;
-    ProgressDialog mProgressDialog;
-    DownloadMusicfromInternet mDownloadTask;
+    ProgressDialog mProgress;
     ArrayAdapter<KirtanData> kirtanAdapter;
 
     @Override
@@ -43,12 +47,12 @@ public class Lectures extends Activity {
         setContentView(R.layout.activity_list_view_android_example);
 
         Intent intent = getIntent();
-        String jsonStr = intent.getStringExtra("lectures");
+        String jsonStr = intent.getStringExtra("kirtans");
 
         ArrayList<KirtanData> data = new ArrayList<KirtanData>();
 
         try {
-          JSONArray json = new JSONArray(jsonStr);
+            JSONArray json = new JSONArray(jsonStr);
             for(int i = 0; i < json.length(); i++) {
                 JSONObject row = json.getJSONObject(i);
                 data.add(new KirtanData(row.getString("name"), row.getString("url"), row.getString("author")));
@@ -57,12 +61,12 @@ public class Lectures extends Activity {
             e.printStackTrace();
         }
 
-        mDownload = new Download(this);
-        mDownloadTask = new DownloadMusicfromInternet();
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("Downloading Kirtan !!");
+        mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Downloading Lecture !!");
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mDownload = new Download(this);
+        mDownload.setProgress(mProgress);
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -91,7 +95,7 @@ public class Lectures extends Activity {
                     if ( mDownload.isPlaying() ) {
                         mDownload.pause();
                     } else {
-                        File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+                        File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
                         mDownload.resume(file);
                     }
                 } else {
@@ -113,7 +117,7 @@ public class Lectures extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Lectures.this.kirtanAdapter.getFilter().filter(s);
+                Kirtans.this.kirtanAdapter.getFilter().filter(s);
             }
 
             @Override
@@ -121,19 +125,20 @@ public class Lectures extends Activity {
 
             }
         });
+
     }
 
     protected void showProgress() {
-        mProgressDialog.show();
+        mProgress.show();
     }
 
     protected void hideProgress() {
-        mProgressDialog.dismiss();
+        mProgress.dismiss();
     }
 
     private void play(String name, String url) {
 
-        File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ name);
+        File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ name);
         // Check if the Music file already exists
         if (file.exists()) {
             // Play Music
@@ -141,7 +146,7 @@ public class Lectures extends Activity {
             // If the Music File doesn't exist in SD card (Not yet downloaded)
         } else {
             // Trigger Async Task (onPreExecute method)
-            mDownloadTask.execute(name,url);
+            new DownloadMusicfromInternet().execute(name,url);
         }
     }
 
@@ -154,21 +159,12 @@ public class Lectures extends Activity {
             super.onPreExecute();
         }
 
-        /**
-         * Updating progress bar
-         * */
-        @Override
-        protected void onProgressUpdate(String... progress) {
-            // setting progress percentage
-            mProgressDialog.setProgress(Integer.parseInt(progress[0]));
-        }
-
-
         // Download Music File from Internet
         @Override
         protected String doInBackground(String... f_url) {
             int count;
             try {
+
                 URL url = new URL(f_url[1]);
                 URLConnection conection = url.openConnection();
                 conection.connect();
@@ -178,7 +174,7 @@ public class Lectures extends Activity {
                 InputStream input = new BufferedInputStream(url.openStream(),10*1024);
 
                 String dirName = "/iskcon/";
-                File directory = new File(Lectures.this.getFilesDir()+dirName);
+                File directory = new File(Kirtans.this.getFilesDir()+dirName);
 
                 if (!directory.exists()) {
                     directory.mkdirs();
@@ -195,7 +191,7 @@ public class Lectures extends Activity {
                     total += count;
                     // Publish the progress which triggers onProgressUpdate method
                     int progressPercentage = (int) ((total * 100) / lenghtOfFile);
-                    mProgressDialog.setProgress(progressPercentage);
+                    mProgress.setProgress(progressPercentage);
 
                     // Write data to file
                     output.write(data, 0, count);
@@ -205,18 +201,25 @@ public class Lectures extends Activity {
                 // Close streams
                 output.close();
                 input.close();
+                hideProgress();
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
             }
             return null;
         }
 
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            mProgress.setProgress(Integer.parseInt(progress[0]));
+        }
+
         // Once Music File is downloaded
         @Override
         protected void onPostExecute(String file_url) {
             hideProgress();
-            File file = new File(Lectures.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
+            File file = new File(Kirtans.this.getFilesDir()+"/iskcon/"+ currentKirtanData.getmName());
             mDownload.markDownloadComplete(file);
+
         }
     }
 

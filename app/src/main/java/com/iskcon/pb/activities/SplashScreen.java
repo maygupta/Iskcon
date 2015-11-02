@@ -1,9 +1,12 @@
-package com.iskcon.pb;
+package com.iskcon.pb.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.iskcon.pb.R;
+import com.iskcon.pb.utils.Download;
 
 /**
  * Created by maygupta on 7/4/15.
@@ -33,7 +36,7 @@ public class SplashScreen extends Activity {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            JsonParser jsonParser = new JsonParser();
+            Download.JsonParser jsonParser = new Download.JsonParser();
             lectures = jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/lectures/");
             kirtans= jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/kirtans/");
             darshans = jsonParser.getJSONFromUrl("http://iskonadmin.herokuapp.com/api/images/");

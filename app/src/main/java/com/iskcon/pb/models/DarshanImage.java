@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.models;
 
 /**
  * Created by maygupta on 10/21/15.

@@ -1,9 +1,15 @@
-package com.iskcon.pb;
+package com.iskcon.pb.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.iskcon.pb.R;
+import com.iskcon.pb.adapters.ImageAdapter;
+import com.iskcon.pb.models.DarshanImage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,12 +19,16 @@ import java.util.ArrayList;
 
 public class DarshansActivity  extends Activity
 {
+    private ListView gridView;
+    private ArrayList<DarshanImage>images;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.darshans);
-        ListView gridview = (ListView) findViewById(R.id.gridview);
+        gridView = (ListView) findViewById(R.id.gridview);
+
+        setUpOnClickListener();
 
         Intent intent = getIntent();
         String jsonStr = intent.getStringExtra("darshans");
@@ -26,16 +36,29 @@ public class DarshansActivity  extends Activity
         try {
             JSONObject darshans = new JSONObject(jsonStr);
             JSONArray darshansArray = darshans.getJSONArray("darshans");
-            ArrayList<DarshanImage>images = new ArrayList<>();
+            images = new ArrayList<>();
 
             for(int i = 0; i < darshansArray.length(); i++) {
                 JSONObject row = darshansArray.getJSONObject(i);
                 DarshanImage image = new DarshanImage(row.getString("url"), row.getString("name"));
                 images.add(image);
             }
-            gridview.setAdapter(new ImageAdapter(this, images));
+            gridView.setAdapter(new ImageAdapter(this, images));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void setUpOnClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intentForFullDarshan = new Intent(DarshansActivity.this, FullDarshanDetailsActivity.class);
+                DarshanImage image = images.get(position);
+                intentForFullDarshan.putExtra("url", image.url);
+                startActivity(intentForFullDarshan);
+            }
+        });
     }
 }

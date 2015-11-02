@@ -1,4 +1,4 @@
-package com.iskcon.pb;
+package com.iskcon.pb.activities;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
+
+import com.iskcon.pb.R;
 
 
 public class MainActivity extends TabActivity {

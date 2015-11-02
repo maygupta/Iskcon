@@ -1,8 +1,9 @@
 package com.iskcon.pb.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,7 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class DarshansActivity  extends Activity
+public class DarshansActivity  extends ActionBarActivity
 {
     private ListView gridView;
     private ArrayList<DarshanImage>images;
@@ -48,6 +49,12 @@ public class DarshansActivity  extends Activity
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void setUpOnClickListener() {

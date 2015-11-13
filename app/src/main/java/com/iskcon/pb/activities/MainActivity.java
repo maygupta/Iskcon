@@ -1,26 +1,37 @@
 package com.iskcon.pb.activities;
 
-import android.app.TabActivity;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.iskcon.pb.R;
+import com.iskcon.pb.fragments.KirtansFragment;
+import com.iskcon.pb.fragments.LecturesFragment;
 
 
-public class MainActivity extends TabActivity {
-
-    private static TabHost mTabHst;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpTabs();
+
+        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+        vpPager.setAdapter(new MediaPagerAdapter(getSupportFragmentManager()));
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
+        getSupportActionBar().setLogo(R.drawable.iskcon_logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabStrip.setViewPager(vpPager);
     }
 
     @Override
@@ -30,53 +41,36 @@ public class MainActivity extends TabActivity {
         return true;
     }
 
-    private void setUpTabs() {
+    public class MediaPagerAdapter extends FragmentPagerAdapter {
+        final int PAGE_COUNT = 2;
+        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans"};
 
-        Intent data = getIntent();
-        String lectures = data.getStringExtra("lectures");
-        String kirtans = data.getStringExtra("kirtans");
-        String darshans = data.getStringExtra("darshans");
-
-        Resources res = getResources();
-        Intent i = new Intent(this,Kirtans.class);
-        i.putExtra("kirtans", kirtans);
-        Intent j = new Intent(this,Lectures.class);
-        j.putExtra("lectures", lectures);
-        Intent k = new Intent(this,DarshansActivity.class);
-        k.putExtra("darshans", darshans);
-
-        mTabHst = getTabHost();
-
-        mTabHst.addTab(mTabHst.newTabSpec("tab_1")
-                .setIndicator("Kirtans",res.getDrawable(R.drawable.kirtans))
-                .setContent(i));
-        mTabHst.addTab(mTabHst.newTabSpec("tab_2")
-                .setIndicator("Lectures",res.getDrawable(R.drawable.kirtans))
-                .setContent(j));
-        mTabHst.addTab(mTabHst.newTabSpec("tab_3")
-                .setIndicator("Darshans",res.getDrawable(R.drawable.kirtans))
-                .setContent(k));
-        mTabHst.setCurrentTab(0);
-        mTabHst.setOnTabChangedListener(new OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-                // TODO Auto-generated method stub
-                setTabColor(getTabHost());
-            }
-        });
-        setTabColor(mTabHst);
-    }
-
-    public static void setCurrentTab(int tab) {
-        mTabHst.setCurrentTab(tab);
-    }
-
-    public static void setTabColor(TabHost tabhost) {
-        for(int i=0;i<tabhost.getTabWidget().getChildCount();i++)
-        {
-            tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#B8B8B8")); //unselected
+        public MediaPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
-        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#E0E0E0")); // selected
+
+        @Override
+        public Fragment getItem(int position) {
+            if ( position == 0) {
+                return new KirtansFragment();
+            } else if (position == 1) {
+                return new LecturesFragment();
+            }  else if (position == 2) {
+                return new DarshansFragment();
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        @Override
+        public int getCount() {
+            return tabTitles.length;
+        }
     }
 
 }

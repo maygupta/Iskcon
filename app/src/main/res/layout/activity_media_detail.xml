@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:id="@+id/ivMediaImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/tvPlay"
+        android:textSize="10sp"
+        android:drawableLeft="@drawable/play"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/tvPause"
+        android:textSize="10sp"
+        android:drawableLeft="@drawable/pause"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/tvPlay"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/tvDownload"
+        android:textSize="10sp"
+        android:drawableLeft="@drawable/download"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+
+        />
+     <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_alignParentBottom="true"
+         android:layout_marginBottom="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@id/tvPlay" />
+</RelativeLayout>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.iskcon.pb" >
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,42 +23,31 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".activities.Kirtans"
-            android:label="@string/title_activity_kirtans" >
-        </activity>
-        <activity
-            android:name=".activities.Lectures"
-            android:label="@string/title_activity_lectures" >
-        </activity>
-        <activity
-            android:name=".utils.Download"
-            android:label="Download" >
-        </activity>
-        <activity
-            android:name=".activities.DarshansActivity"
-            android:label="@string/title_activity_darshans" >
+        <activity android:name=".activities.MainActivity" >
         </activity>
         <activity
             android:name=".activities.FullDarshanDetailsActivity"
             android:label="@string/title_activity_darshans" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.iskcon.pb.activities.DarshansActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDcGAYUDe6RPJTTPn1L69UEC7S8s2PIkPk"/>
+            android:value="AIzaSyDcGAYUDe6RPJTTPn1L69UEC7S8s2PIkPk" />
 
+        <activity
+            android:name=".activities.MediaDetailActivity"
+            android:label="@string/title_activity_media_detail" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

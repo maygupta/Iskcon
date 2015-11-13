@@ -6,10 +6,17 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iskcon.pb.R;
 import com.iskcon.pb.models.KirtanData;
@@ -17,9 +24,16 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-public class MediaDetailActivity extends AppCompatActivity {
+public class MediaDetailActivity extends AppCompatActivity implements Runnable{
 
     MediaPlayer mediaPlayer;
+    ImageButton btnPlay;
+    ImageButton btnPause;
+    SeekBar seekBar;
+    TextView tvTotalTime;
+    TextView tvCurrentTime;
+    Thread currentThread;
+    boolean continueRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +46,45 @@ public class MediaDetailActivity extends AppCompatActivity {
         mediaPlayer = new MediaPlayer();
         ImageView ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
         Picasso.with(this).load(Uri.parse(kirtanData.getImageUrl())).into(ivMediaImage);
+        TextView tvMediaName = (TextView) findViewById(R.id.tvMediaName);
+        tvMediaName.setText(kirtanData.mName);
 
-        streamKirtan(kirtanData.mUrl);
+        getSupportActionBar().setTitle("Loading...");
+		setUpViews();
+		streamKirtan(kirtanData.mUrl);
+        currentThread = new Thread(this);
+        currentThread.start();
     }
 
-    @Override
+	private void setUpViews() {
+		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		btnPause = (ImageButton) findViewById(R.id.media_pause);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        tvCurrentTime= (TextView) findViewById(R.id.tvCurrentTime);
+        tvTotalTime= (TextView) findViewById(R.id.tvTotalTime);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if(b) {
+                    mediaPlayer.seekTo(i);
+                    seekBar.setProgress(i);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+	}
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_media_detail, menu);
@@ -51,7 +99,8 @@ public class MediaDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.home) {
+            onBackPressed();
             return true;
         }
 
@@ -59,7 +108,6 @@ public class MediaDetailActivity extends AppCompatActivity {
     }
 
     void streamKirtan(String url) {
-
         // Set type to streaming
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         // Listen for if the audio file can't be prepared
@@ -68,6 +116,7 @@ public class MediaDetailActivity extends AppCompatActivity {
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 // ... react appropriately ...
                 // The MediaPlayer has moved to the Error state, must be reset!
+                Toast.makeText(MediaDetailActivity.this, "Error loading the media", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -75,7 +124,12 @@ public class MediaDetailActivity extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mediaPlayer.start();
+                getSupportActionBar().setTitle("Playing...");
+                int duration = mp.getDuration();
+                seekBar.setMax(duration);
+                tvTotalTime.setText(timePresenter(duration));
+                mp.start();
+                btnPlay.setBackgroundColor(getResources().getColor(R.color.red));
             }
         });
         // Set the data source to the remote URL
@@ -84,15 +138,87 @@ public class MediaDetailActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int i) {
+                if(mp.isPlaying() && seekBar != null) {
+                    int currentPosition = mp.getCurrentPosition();
+                    seekBar.setProgress(currentPosition);
+                }
+            }
+        });
+
         // Trigger an async preparation which will file listener when completed
         mediaPlayer.prepareAsync();
     }
 
+	public void play(View view) {
+        if (!mediaPlayer.isPlaying()) {
+            int currentPosition = mediaPlayer.getCurrentPosition();
+            mediaPlayer.seekTo(currentPosition);
+            mediaPlayer.start();
+            btnPlay.setBackgroundColor(getResources().getColor(R.color.red));
+            btnPause.setBackgroundColor(getResources().getColor(R.color.grey));
+            getSupportActionBar().setTitle("Playing...");
+        }
+	}
+
+	public void pause(View view) {
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            btnPlay.setBackgroundColor(getResources().getColor(R.color.grey));
+            btnPause.setBackgroundColor(getResources().getColor(R.color.red));
+            getSupportActionBar().setTitle("Paused...");
+        }
+	}
+
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        continueRun = false;
+    }
+
+    @Override
+    public void run() {
+        try{
+            while(mediaPlayer != null){
+                if(!continueRun){
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                    return;
+                }
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                Message msg = new Message();
+                msg.what = currentPosition;
+                threadHandler.sendMessage(msg);
+                Thread.sleep(1000);
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    private Handler threadHandler = new Handler(){
+        public void handleMessage(Message msg){
+            seekBar.setProgress(msg.what);
+            tvCurrentTime.setText(timePresenter(msg.what));
+        }
+    };
+
+    public String timePresenter(int timeInMilliSeconds) {
+        int hours = timeInMilliSeconds/(1000*60*60);
+        int totalMinutes = timeInMilliSeconds/(1000*60);
+        int minutes = totalMinutes%60;
+        int totalSeconds = timeInMilliSeconds/1000;
+        int seconds = totalSeconds%60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        continueRun = false;
     }
 
 }

@@ -2,7 +2,9 @@ package com.iskcon.pb.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +37,9 @@ public class FullDarshanDetailsActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_darshan_view_layout);
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
+
         ivFullImage = (TouchImageView) findViewById(R.id.ivFullImage);
         Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("url"))).into(ivFullImage, new Callback() {
             @Override

@@ -77,7 +77,8 @@ public class LecturesFragment extends Fragment {
                      Media media = new Media(object.getString("name"),
                             object.getString("author"),
                             object.getString("url"),
-                            object.getString("type"));
+                            object.getString("type"),
+                             object.getString("author_image_url"));
                     originalLectures.add(media);
                     lectureAdapter.add(media);
                 }

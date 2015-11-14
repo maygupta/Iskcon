@@ -18,6 +18,7 @@ import com.iskcon.pb.fragments.LecturesFragment;
 
 
 public class MainActivity extends AppCompatActivity {
+    final int PAGE_COUNT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
-        vpPager.setAdapter(new MediaPagerAdapter(getSupportFragmentManager()));
+        MediaPagerAdapter adapter = new MediaPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapter);
+        vpPager.setOffscreenPageLimit(3);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
         getSupportActionBar().setLogo(R.drawable.iskcon_logo);
@@ -44,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class MediaPagerAdapter extends FragmentPagerAdapter {
-        final int PAGE_COUNT = 3;
         private String tabTitles[] = {"Kirtans", "Lectures", "Darshans"};
 
         public MediaPagerAdapter(FragmentManager fm) {

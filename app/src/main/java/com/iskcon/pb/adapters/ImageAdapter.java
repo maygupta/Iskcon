@@ -19,27 +19,37 @@ import java.util.List;
  */
 public class ImageAdapter extends ArrayAdapter<Darshan> {
 
-        public ImageAdapter(Context c, List<Darshan> images) {
-            super(c,0,images);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Darshan image = getItem(position);
-
-            if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.image_layout, parent, false);
-            }
-
-            ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivDarshan);
-            TextView tvDescription = (TextView) convertView.findViewById(R.id.tvDarshanDescription);
-
-            tvDescription.setText(image.description);
-
-            ivImage.setImageResource(android.R.color.transparent);
-            Picasso.with(getContext()).load(image.url).into(ivImage);
-
-            return convertView;
-        }
-
+    private static class ViewHolder
+    {
+        public ImageView  ivImage;
+        public TextView tvDescription;
     }
+
+    public ImageAdapter(Context c, List<Darshan> images) {
+        super(c,0,images);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Darshan image = getItem(position);
+
+        ViewHolder viewHolder;
+        if (convertView == null){
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.image_layout, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.ivDarshan);
+            viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDarshanDescription);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        viewHolder.tvDescription.setText(image.description);
+
+        viewHolder.ivImage.setImageResource(android.R.color.transparent);
+        Picasso.with(getContext()).load(image.url).into(viewHolder.ivImage);
+
+        return convertView;
+    }
+
+}

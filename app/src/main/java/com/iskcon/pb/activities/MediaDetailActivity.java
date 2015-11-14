@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.Menu;
@@ -51,11 +52,16 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     NotificationManager notifyManager;
     NotificationCompat.Builder mBuilder;
     int id = 1;
+    private PowerManager.WakeLock wakeLock;
+    private static final String TAG = "com.iskcon.maygupta.MediaDetailActivity.WAKE_LOCK_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_detail);
+
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
         getSupportActionBar().setTitle("Loading...");
@@ -268,12 +274,6 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
 	}
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        continueRun = false;
-    }
-
-    @Override
     public void run() {
         try{
             while(mediaPlayer != null){
@@ -307,12 +307,6 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         int totalSeconds = timeInMilliSeconds/1000;
         int seconds = totalSeconds%60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        continueRun = false;
     }
 
     public class DownloadMedia extends AsyncTask<String, Integer, String> {
@@ -368,4 +362,21 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        wakeLock.acquire();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wakeLock.release();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        continueRun = false;
+    }
 }

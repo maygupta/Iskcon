@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iskcon.pb.R;
+import com.iskcon.pb.models.Media;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
@@ -47,8 +48,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     TextView tvCurrentTime;
     Thread currentThread;
     boolean continueRun = true;
-    String mediaUrl;
-    String mediaName;
+    Media media;
     NotificationManager notifyManager;
     NotificationCompat.Builder mBuilder;
     int id = 1;
@@ -60,30 +60,28 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_detail);
 
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
-
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
-        getSupportActionBar().setTitle("Loading...");
-
-        mediaPlayer = new MediaPlayer();
+        initServices();
 
         Intent intent = getIntent();
-        mediaName = intent.getStringExtra("name");
-        mediaUrl = intent.getStringExtra("url");
+
+        media = new Media(intent.getStringExtra("name"),
+                intent.getStringExtra("author"),
+                intent.getStringExtra("url"),
+                intent.getStringExtra("type"),
+                intent.getStringExtra("author_image_url"));
 
         ImageView ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
         TextView tvMediaName = (TextView) findViewById(R.id.tvMediaName);
 
-        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("image_url"))).into(ivMediaImage);
-        tvMediaName.setText(mediaName);
+        Picasso.with(this).load(Uri.parse(media.authorImageUrl)).into(ivMediaImage);
+        tvMediaName.setText(media.name);
 
 		setUpViews();
 
         if(fileExistsOnCard()) {
             playKirtan(getFilepath());
         } else {
-            streamKirtan(mediaUrl);
+            streamKirtan(media.url);
         }
 
         notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -93,6 +91,24 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
             .setSmallIcon(R.drawable.download);
         currentThread = new Thread(this);
         currentThread.start();
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                btnPlay.setVisibility(View.VISIBLE);
+                btnPause.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void initServices() {
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
+        getSupportActionBar().setTitle("Loading...");
+
+        mediaPlayer = new MediaPlayer();
     }
 
     boolean fileExistsOnCard() {
@@ -101,7 +117,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     }
 
     public String getFilename() {
-        return mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
+        return media.name.replaceAll(" ", "_").toLowerCase() + ".mp3";
     }
 
     public String getFilepath() {
@@ -169,7 +185,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
-        String filename = mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
+        String filename = media.name.replaceAll(" ", "_").toLowerCase() + ".mp3";
         String absoluteFilename = mFolder.getAbsolutePath() + "/" + filename;
 
         File imgFile = new File(absoluteFilename);
@@ -184,7 +200,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
             Toast.makeText(this, "Already downloaded!!", Toast.LENGTH_LONG).show();
             return;
         }
-        new DownloadMedia().execute(mediaUrl, absoluteFilename);
+        new DownloadMedia().execute(media.url, absoluteFilename);
     }
 
     void playKirtan(String filepath) {
@@ -333,7 +349,10 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
                 while ((count = input.read(data)) != -1) {
                     total += count;
                     // publishing the progress....
-                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    int percent = (int) (total * 100 / lenghtOfFile);
+                    if(percent%10 == 0) {
+                        publishProgress(percent);
+                    }
                     output.write(data, 0, count);
                 }
 
@@ -359,6 +378,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
             mBuilder.setContentText("Download complete")
                 .setProgress(0, 0, false);
             notifyManager.notify(id, mBuilder.build());
+            media.pinInBackground();
         }
     }
 

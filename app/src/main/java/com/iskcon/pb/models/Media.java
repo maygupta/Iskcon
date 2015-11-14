@@ -11,11 +11,11 @@ import java.io.Serializable;
 @ParseClassName("Media")
 public class Media extends ParseObject implements Serializable{
 
-    private String name;
-    private String url;
-    private String author;
-    private String type;
-    private String authorImageUrl;
+    public String name;
+    public String url;
+    public String author;
+    public String type;
+    public String authorImageUrl;
 
     public String getName() {
         return getString("name");
@@ -47,8 +47,7 @@ public class Media extends ParseObject implements Serializable{
         put("url", url);
         put("author", author);
         put("type", type);
-        put("author_image_url", authorImageUrl);
-        pinInBackground();
+        put("author_image_url", imageUrl);
     }
 
     public Media(){}

@@ -38,9 +38,6 @@
         <activity
             android:name=".activities.FullDarshanDetailsActivity"
             android:label="@string/title_activity_darshans" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
         </activity>
 
         <meta-data

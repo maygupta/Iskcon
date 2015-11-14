@@ -66,7 +66,8 @@ public class KirtansFragment extends Fragment {
         query.whereEqualTo("type", "kirtan");
         if(!isNetworkAvailable()) {
             query.fromLocalDatastore();
-            query.setLimit(10);
+            query.orderByDescending("createdAt");
+            query.whereExists("author_image_url");
         }
         query.findInBackground(new FindCallback<Media>() {
             @Override
@@ -97,7 +98,9 @@ public class KirtansFragment extends Fragment {
                 Intent i = new Intent(getActivity(), MediaDetailActivity.class);
                 Media media = kirtans.get(position);
                 i.putExtra("url", media.getUrl());
-                i.putExtra("image_url", media.getImageUrl());
+                i.putExtra("type", media.type);
+                i.putExtra("author", media.author);
+                i.putExtra("author_image_url", media.getImageUrl());
                 i.putExtra("name", media.getName());
                 startActivity(i);
             }

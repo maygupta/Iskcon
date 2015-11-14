@@ -6,11 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.iskcon.pb.R;
@@ -29,10 +33,10 @@ import java.util.List;
 public class KirtansFragment extends Fragment {
 
     ListView listView;
-    ArrayAdapter<Media> kirtanAdapter;
+    MediaAdapter kirtanAdapter;
     AsyncHttpClient client;
     ArrayList<Media> kirtans;
-
+    ArrayList<Media> originalKirtans;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,11 +47,14 @@ public class KirtansFragment extends Fragment {
         listView = (ListView) v.findViewById(R.id.list);
 
         kirtans = new ArrayList<Media>();
+        originalKirtans = new ArrayList<Media>();
 
         kirtanAdapter = new MediaAdapter(getContext(), kirtans);
 
         // Assign adapter to ListView
         listView.setAdapter(kirtanAdapter);
+
+        setHasOptionsMenu(true);
 
         setUpViews();
         populateKirtans();
@@ -65,10 +72,12 @@ public class KirtansFragment extends Fragment {
             @Override
             public void done(List<Media> objects, ParseException e) {
                 for (Media object : objects) {
-                    kirtanAdapter.add(new Media(object.getString("name"),
+                    Media media = new Media(object.getString("name"),
                             object.getString("author"),
                             object.getString("url"),
-                            object.getString("type")));
+                            object.getString("type"));
+                    originalKirtans.add(media);
+                    kirtanAdapter.add(media);
                 }
                 kirtanAdapter.notifyDataSetChanged();
             }
@@ -102,4 +111,44 @@ public class KirtansFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+//                filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
+        });
+
+    }
+
+    private void filter(String query) {
+        ArrayList<Media> matches = new ArrayList<Media>();
+        kirtanAdapter.clear();
+        if (query == null || query.isEmpty()) {
+            kirtanAdapter.addAll(originalKirtans);
+            kirtanAdapter.notifyDataSetChanged();
+            return;
+        }
+        for(Media m:originalKirtans) {
+            if(m.getName().toLowerCase().contains(query.toLowerCase()))  {
+                matches.add(m);
+            }
+        }
+        kirtanAdapter.addAll(matches);
+        kirtanAdapter.notifyDataSetChanged();
+    }
 }

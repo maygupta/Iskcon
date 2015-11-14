@@ -1,16 +1,20 @@
 package com.iskcon.pb.activities;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iskcon.pb.R;
-import com.iskcon.pb.utils.DownloadMedia;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class MediaDetailActivity extends AppCompatActivity implements Runnable{
 
@@ -39,6 +48,9 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     boolean continueRun = true;
     String mediaUrl;
     String mediaName;
+    NotificationManager notifyManager;
+    NotificationCompat.Builder mBuilder;
+    int id = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +79,12 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         } else {
             streamKirtan(mediaUrl);
         }
+
+        notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle(getFilename())
+            .setContentText("Download in progress")
+            .setSmallIcon(R.drawable.download);
         currentThread = new Thread(this);
         currentThread.start();
     }
@@ -76,13 +94,16 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         return file.exists();
     }
 
+    public String getFilename() {
+        return mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
+    }
+
     public String getFilepath() {
         File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
-        String filename = mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
-        return mFolder.getAbsolutePath() + "/" + filename;
+        return mFolder.getAbsolutePath() + "/" + getFilename();
     }
 
 	private void setUpViews() {
@@ -144,16 +165,18 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         }
         String filename = mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
         String absoluteFilename = mFolder.getAbsolutePath() + "/" + filename;
+
         File imgFile = new File(absoluteFilename);
-        if (!mFolder.exists()) {
-            mFolder.mkdir();
-        }
+
         if (!imgFile.exists()) {
             try {
                 imgFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            Toast.makeText(this, "Already downloaded!!", Toast.LENGTH_LONG).show();
+            return;
         }
         new DownloadMedia().execute(mediaUrl, absoluteFilename);
     }
@@ -290,6 +313,59 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     public void onBackPressed() {
         super.onBackPressed();
         continueRun = false;
+    }
+
+    public class DownloadMedia extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... mediaData) {
+            int count;
+            try {
+                URL mediaUrl = new URL(mediaData[0]);
+                URLConnection conn = mediaUrl.openConnection();
+                conn.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conn.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(mediaUrl.openStream());
+
+                OutputStream output = new FileOutputStream(mediaData[1]);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            mBuilder.setProgress(100, values[0], false);
+            notifyManager.notify(id, mBuilder.build());
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            mBuilder.setContentText("Download complete")
+                .setProgress(0, 0, false);
+            notifyManager.notify(id, mBuilder.build());
+        }
     }
 
 }

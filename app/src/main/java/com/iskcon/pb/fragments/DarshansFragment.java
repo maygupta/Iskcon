@@ -63,7 +63,6 @@ public class DarshansFragment extends Fragment
         });
     }
 
-
     public void setUpOnClickListener() {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

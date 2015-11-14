@@ -21,8 +21,11 @@ import java.util.List;
  */
 public class MediaAdapter extends ArrayAdapter<Media> {
 
+    List<Media> mediaList;
+
     public MediaAdapter(Context context, List<Media> objects) {
         super(context, 0, objects);
+        mediaList = objects;
     }
 
     @Override

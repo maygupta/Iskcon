@@ -59,6 +59,7 @@ public class LecturesFragment extends Fragment {
 
         if(!isNetworkAvailable()) {
             query.fromLocalDatastore();
+            query.setLimit(10);
         }
 
         query.findInBackground(new FindCallback<Media>() {

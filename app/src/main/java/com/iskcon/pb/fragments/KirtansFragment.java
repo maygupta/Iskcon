@@ -59,6 +59,7 @@ public class KirtansFragment extends Fragment {
         query.whereEqualTo("type", "kirtan");
         if(!isNetworkAvailable()) {
             query.fromLocalDatastore();
+            query.setLimit(10);
         }
         query.findInBackground(new FindCallback<Media>() {
             @Override

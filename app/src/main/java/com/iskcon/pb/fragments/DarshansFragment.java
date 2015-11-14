@@ -49,6 +49,7 @@ public class DarshansFragment extends Fragment
         ParseQuery<Darshan> query = ParseQuery.getQuery(Darshan.class);
         if(!isNetworkAvailable()) {
             query.fromLocalDatastore();
+            query.setLimit(10);
         }
         query.findInBackground(new FindCallback<Darshan>() {
             @Override

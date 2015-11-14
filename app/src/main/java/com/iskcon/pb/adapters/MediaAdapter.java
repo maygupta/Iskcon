@@ -1,6 +1,7 @@
 package com.iskcon.pb.adapters;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.iskcon.pb.models.Media;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -44,10 +46,31 @@ public class MediaAdapter extends ArrayAdapter<Media> {
         ivAuthorImage.setImageResource(0);
         Picasso.with(getContext()).load(media.getImageUrl()).into(ivAuthorImage);
 
+        TextView tvDownloaded = (TextView) convertView.findViewById(R.id.tvDownloaded);
+        if (fileExistsOnCard(media.getName())) {
+            tvDownloaded.setVisibility(View.VISIBLE);
+        } else {
+            tvDownloaded.setVisibility(View.GONE);
+        }
+
         convertView.setTag(media.getUrl());
 
         return convertView;
 
+    }
+
+    boolean fileExistsOnCard(String name) {
+        File file = new File(getFilepath(name));
+        return file.exists();
+    }
+
+    public String getFilepath(String name) {
+        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        if (!mFolder.exists()) {
+            mFolder.mkdir();
+        }
+        String filename = name.replaceAll(" ", "_").toLowerCase() + ".mp3";
+        return mFolder.getAbsolutePath() + "/" + filename;
     }
 
 }

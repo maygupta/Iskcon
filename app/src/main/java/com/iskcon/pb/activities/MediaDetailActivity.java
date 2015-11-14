@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iskcon.pb.R;
+import com.iskcon.pb.utils.DownloadMedia;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MediaDetailActivity extends AppCompatActivity implements Runnable{
@@ -34,6 +37,8 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     TextView tvCurrentTime;
     Thread currentThread;
     boolean continueRun = true;
+    String mediaUrl;
+    String mediaName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +46,43 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         setContentView(R.layout.activity_media_detail);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
+        getSupportActionBar().setTitle("Loading...");
+
+        mediaPlayer = new MediaPlayer();
 
         Intent intent = getIntent();
-        mediaPlayer = new MediaPlayer();
-        ImageView ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
-        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("image_url"))).into(ivMediaImage);
-        TextView tvMediaName = (TextView) findViewById(R.id.tvMediaName);
-        tvMediaName.setText(intent.getStringExtra("name"));
+        mediaName = intent.getStringExtra("name");
+        mediaUrl = intent.getStringExtra("url");
 
-        getSupportActionBar().setTitle("Loading...");
+        ImageView ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
+        TextView tvMediaName = (TextView) findViewById(R.id.tvMediaName);
+
+        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("image_url"))).into(ivMediaImage);
+        tvMediaName.setText(mediaName);
+
 		setUpViews();
-		streamKirtan(intent.getStringExtra("url"));
+
+        if(fileExistsOnCard()) {
+            playKirtan(getFilepath());
+        } else {
+            streamKirtan(mediaUrl);
+        }
         currentThread = new Thread(this);
         currentThread.start();
+    }
+
+    boolean fileExistsOnCard() {
+        File file = new File(getFilepath());
+        return file.exists();
+    }
+
+    public String getFilepath() {
+        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        if (!mFolder.exists()) {
+            mFolder.mkdir();
+        }
+        String filename = mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
+        return mFolder.getAbsolutePath() + "/" + filename;
     }
 
 	private void setUpViews() {
@@ -66,7 +95,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(b) {
+                if (b) {
                     mediaPlayer.seekTo(i);
                     seekBar.setProgress(i);
                 }
@@ -102,9 +131,52 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         if (id == R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.action_download) {
+            download();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void download() {
+        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        if (!mFolder.exists()) {
+            mFolder.mkdir();
+        }
+        String filename = mediaName.replaceAll(" ", "_").toLowerCase() + ".mp3";
+        String absoluteFilename = mFolder.getAbsolutePath() + "/" + filename;
+        File imgFile = new File(absoluteFilename);
+        if (!mFolder.exists()) {
+            mFolder.mkdir();
+        }
+        if (!imgFile.exists()) {
+            try {
+                imgFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        new DownloadMedia().execute(mediaUrl, absoluteFilename);
+    }
+
+    void playKirtan(String filepath) {
+        try {
+            mediaPlayer.setDataSource(filepath);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                getSupportActionBar().setTitle("Playing...");
+                int duration = mp.getDuration();
+                seekBar.setMax(duration);
+                tvTotalTime.setText(timePresenter(duration));
+                mp.start();
+            }
+        });
     }
 
     void streamKirtan(String url) {
@@ -129,7 +201,6 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
                 seekBar.setMax(duration);
                 tvTotalTime.setText(timePresenter(duration));
                 mp.start();
-                btnPlay.setBackgroundColor(getResources().getColor(R.color.red));
             }
         });
         // Set the data source to the remote URL
@@ -158,8 +229,8 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
             int currentPosition = mediaPlayer.getCurrentPosition();
             mediaPlayer.seekTo(currentPosition);
             mediaPlayer.start();
-            btnPlay.setBackgroundColor(getResources().getColor(R.color.red));
-            btnPause.setBackgroundColor(getResources().getColor(R.color.grey));
+            btnPlay.setVisibility(View.GONE);
+            btnPause.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Playing...");
         }
 	}
@@ -167,8 +238,8 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
 	public void pause(View view) {
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            btnPlay.setBackgroundColor(getResources().getColor(R.color.grey));
-            btnPause.setBackgroundColor(getResources().getColor(R.color.red));
+            btnPause.setVisibility(View.GONE);
+            btnPlay.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Paused...");
         }
 	}

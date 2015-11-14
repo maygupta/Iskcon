@@ -1,5 +1,6 @@
 package com.iskcon.pb.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iskcon.pb.R;
-import com.iskcon.pb.models.KirtanData;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -42,16 +42,16 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
 
-        KirtanData kirtanData =  (KirtanData) getIntent().getSerializableExtra("kirtan");
+        Intent intent = getIntent();
         mediaPlayer = new MediaPlayer();
         ImageView ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
-        Picasso.with(this).load(Uri.parse(kirtanData.getImageUrl())).into(ivMediaImage);
+        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("image_url"))).into(ivMediaImage);
         TextView tvMediaName = (TextView) findViewById(R.id.tvMediaName);
-        tvMediaName.setText(kirtanData.mName);
+        tvMediaName.setText(intent.getStringExtra("name"));
 
         getSupportActionBar().setTitle("Loading...");
 		setUpViews();
-		streamKirtan(kirtanData.mUrl);
+		streamKirtan(intent.getStringExtra("url"));
         currentThread = new Thread(this);
         currentThread.start();
     }

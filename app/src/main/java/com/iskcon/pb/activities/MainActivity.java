@@ -12,6 +12,7 @@ import android.view.Menu;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.iskcon.pb.R;
+import com.iskcon.pb.fragments.DarshansFragment;
 import com.iskcon.pb.fragments.KirtansFragment;
 import com.iskcon.pb.fragments.LecturesFragment;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
+
     }
 
     @Override

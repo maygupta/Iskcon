@@ -1,72 +1,56 @@
 package com.iskcon.pb.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by maygupta on 7/4/15.
  */
-public class KirtanData implements Serializable{
+@ParseClassName("Media")
+public class Media extends ParseObject implements Serializable{
 
-    public String mName;
-    public String mUrl;
-    public String author;
+    private String name;
+    private String url;
+    private String author;
+    private String type;
 
-    public KirtanData(String name,String url, String author) {
-        this.mName = name;
-        this.mUrl = url;
+    public String getName() {
+        return getString("name");
+    }
+
+    public String getUrl() {
+        return getString("url");
+    }
+
+    public String getAuthor() {
+        return getString("author");
+    }
+
+    public String getType() {
+        return getString("type");
+    }
+
+    public Media(String name,
+                 String author,
+                 String url,
+                 String type) {
+        this.name = name;
+        this.url = url;
         this.author = author;
+        this.type = type;
+        put("name", name);
+        put("url", url);
+        put("author", author);
+        put("type", type);
+        pinInBackground();
     }
 
-    public String getmName() {
-        return mName;
-    }
-
-    public void setmName(String mName) {
-        this.mName = mName;
-    }
-
-    public String getmUrl() {
-        return mUrl;
-    }
-
-    public void setmUrl(String mUrl) {
-        this.mUrl = mUrl;
-    }
-
-    @Override
-    public String toString() {
-        return mName;
-    }
-
-    public KirtanData (JSONObject jsonObject) {
-        try {
-            this.mName = jsonObject.getString("name");
-            this.mUrl = jsonObject.getString("url");
-            this.author = jsonObject.getString("author");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<KirtanData> fromJSONArray(JSONArray array) {
-        ArrayList<KirtanData> data = new ArrayList<KirtanData>();
-        try {
-            for(int i = 0; i < array.length(); i++) {
-                data.add(new KirtanData(array.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
+    public Media(){}
 
     public String getImageUrl() {
+        String author = getAuthor();
         //return "http://www.iskconpunjabibagh.com/wp-content/uploads/2013/05/HG-Rukmini-Krishna-Prabhu.jpg";
         if ( author.equals("HG Rukmini Krishna Prabhu")) {
             return "http://i59.tinypic.com/65ydj6.png";

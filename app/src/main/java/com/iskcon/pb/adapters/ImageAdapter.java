@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iskcon.pb.R;
-import com.iskcon.pb.models.DarshanImage;
+import com.iskcon.pb.models.Darshan;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -17,15 +17,15 @@ import java.util.List;
 /**
  * Created by maygupta on 10/21/15.
  */
-public class ImageAdapter extends ArrayAdapter<DarshanImage> {
+public class ImageAdapter extends ArrayAdapter<Darshan> {
 
-        public ImageAdapter(Context c, List<DarshanImage> images) {
+        public ImageAdapter(Context c, List<Darshan> images) {
             super(c,0,images);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            DarshanImage image = getItem(position);
+            Darshan image = getItem(position);
 
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.image_layout, parent, false);
@@ -36,7 +36,7 @@ public class ImageAdapter extends ArrayAdapter<DarshanImage> {
 
             tvDescription.setText(image.description);
 
-            ivImage.setImageResource(0);
+            ivImage.setImageResource(android.R.color.transparent);
             Picasso.with(getContext()).load(image.url).into(ivImage);
 
             return convertView;

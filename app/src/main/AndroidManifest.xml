@@ -13,6 +13,7 @@
 	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application
+        android:name=".MediaApplication"
         android:allowBackup="true"
         android:icon="@mipmap/krsna"
         android:label="@string/app_name"

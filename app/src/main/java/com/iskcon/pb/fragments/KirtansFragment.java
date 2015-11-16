@@ -148,7 +148,8 @@ public class KirtansFragment extends Fragment {
             return;
         }
         for(Media m:originalKirtans) {
-            if(m.getName().toLowerCase().contains(query.toLowerCase()))  {
+            if(m.getName().toLowerCase().contains(query.toLowerCase()) ||
+                    m.getAuthor().toLowerCase().contains(query.toLowerCase()))  {
                 matches.add(m);
             }
         }

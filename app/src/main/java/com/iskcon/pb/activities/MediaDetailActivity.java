@@ -121,7 +121,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     }
 
     public String getFilepath() {
-        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        File mFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/iskcon");
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
@@ -181,7 +181,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
     }
 
     private void download() {
-        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        File mFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/iskcon");
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
@@ -215,7 +215,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                getSupportActionBar().setTitle("Playing...");
+                getSupportActionBar().setTitle(R.string.playing_audio);
                 int duration = mp.getDuration();
                 seekBar.setMax(duration);
                 tvTotalTime.setText(timePresenter(duration));
@@ -241,7 +241,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                getSupportActionBar().setTitle("Playing...");
+                getSupportActionBar().setTitle(R.string.playing_audio);
                 int duration = mp.getDuration();
                 seekBar.setMax(duration);
                 tvTotalTime.setText(timePresenter(duration));
@@ -285,7 +285,7 @@ public class MediaDetailActivity extends AppCompatActivity implements Runnable{
             mediaPlayer.pause();
             btnPause.setVisibility(View.GONE);
             btnPlay.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle("Paused...");
+            getSupportActionBar().setTitle("Paused");
         }
 	}
 

@@ -53,7 +53,7 @@ public class MediaAdapter extends ArrayAdapter<Media> {
         if (fileExistsOnCard(media.getName())) {
             tvDownloaded.setVisibility(View.VISIBLE);
         } else {
-            tvDownloaded.setVisibility(View.GONE);
+            tvDownloaded.setVisibility(View.INVISIBLE);
         }
 
         convertView.setTag(media.getUrl());
@@ -68,7 +68,7 @@ public class MediaAdapter extends ArrayAdapter<Media> {
     }
 
     public String getFilepath(String name) {
-        File mFolder = new File(Environment.getExternalStorageDirectory() + "/iskcon");
+        File mFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/iskcon");
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }

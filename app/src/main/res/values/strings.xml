@@ -6,6 +6,7 @@
     <string name="title_activity_kirtans">Kirtans</string>
     <string name="title_activity_lectures">Lectures</string>
     <string name="title_activity_darshans">Darshans</string>
+    <string name="playing_audio">Playing Audio</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>

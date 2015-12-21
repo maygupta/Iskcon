@@ -51,6 +51,7 @@ public class DarshansFragment extends Fragment
             query.fromLocalDatastore();
             query.setLimit(10);
         }
+        query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<Darshan>() {
             @Override
             public void done(List<Darshan> objects, ParseException e) {

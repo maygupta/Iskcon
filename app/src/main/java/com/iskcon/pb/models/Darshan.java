@@ -3,6 +3,8 @@ package com.iskcon.pb.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import java.util.Date;
+
 /**
  * Created by maygupta on 10/21/15.
  */
@@ -10,6 +12,7 @@ import com.parse.ParseObject;
 public class Darshan extends ParseObject {
     public String url;
     public String description;
+    public Date createdAt;
 
     public Darshan(){}
 

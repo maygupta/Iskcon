@@ -12,6 +12,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.iskcon.pb.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.iskcon.pb.permission.C2D_MESSAGE" />
 
     <application
         android:name=".MediaApplication"
@@ -43,16 +51,42 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDcGAYUDe6RPJTTPn1L69UEC7S8s2PIkPk" />
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/ic_push_icon" />
 
         <activity
             android:name=".activities.MediaDetailActivity"
             android:label="@string/title_activity_media_detail" >
         </activity>
 
-        <service
-            android:name=".services.DownloadService"
+        <service android:name="com.parse.PushService" />
+
+        <receiver
+            android:name="com.iskcon.pb.CustomReceiver"
             android:exported="false" >
-        </service>
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+<!--               IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
+                <category android:name="com.iskcon.pb" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

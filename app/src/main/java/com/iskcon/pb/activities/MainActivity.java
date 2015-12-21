@@ -1,5 +1,6 @@
 package com.iskcon.pb.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.iskcon.pb.R;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         vpPager.setOffscreenPageLimit(3);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
-        getSupportActionBar().setLogo(R.drawable.iskcon_logo);
+        getSupportActionBar().setLogo(R.drawable.push_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -44,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            Intent i = new Intent(this, Settings.class);
+            startActivity(i);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class MediaPagerAdapter extends FragmentPagerAdapter {

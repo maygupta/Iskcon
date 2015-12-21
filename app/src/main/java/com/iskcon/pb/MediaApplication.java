@@ -5,6 +5,7 @@ import android.app.Application;
 import com.iskcon.pb.models.Darshan;
 import com.iskcon.pb.models.Media;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 /**
@@ -20,7 +21,10 @@ public class MediaApplication extends Application {
         ParseObject.registerSubclass(Media.class);
         ParseObject.registerSubclass(Darshan.class);
         Parse.enableLocalDatastore(this);
+        Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
         Parse.initialize(this, YOUR_APPLICATION_ID, YOUR_CLIENT_KEY);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+
     }
 
 }

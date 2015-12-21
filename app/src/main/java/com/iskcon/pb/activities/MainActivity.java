@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.iskcon.pb.R;
+import com.iskcon.pb.fragments.AnnoucementsFragment;
 import com.iskcon.pb.fragments.DarshansFragment;
 import com.iskcon.pb.fragments.KirtansFragment;
 import com.iskcon.pb.fragments.LecturesFragment;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class MediaPagerAdapter extends FragmentPagerAdapter {
-        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans"};
+        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans", "Announcements"};
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -73,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 return new LecturesFragment();
             }  else if (position == 2) {
                 return new DarshansFragment();
-            } else {
+            } else if (position == 3) {
+                return new AnnoucementsFragment();
+            }
+            else {
                 return null;
             }
         }

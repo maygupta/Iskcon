@@ -59,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MediaPagerAdapter extends FragmentPagerAdapter {
+    public class MediaPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
         private String tabTitles[] = {"Kirtans", "Lectures", "Darshans", "Announcements"};
+        private int tabIcons[] = {R.drawable.ic_kirtan, R.drawable.ic_lecture, R.drawable.ic_darshan,R.drawable.ic_announcement};
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -83,14 +84,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
-
-        @Override
         public int getCount() {
             return tabTitles.length;
         }
+
+        @Override
+        public int getPageIconResId(int i) {
+            return tabIcons[i];
+        }
+    }
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
 }

@@ -47,7 +47,7 @@ public class ImageAdapter extends ArrayAdapter<Darshan> {
         viewHolder.tvDescription.setText(image.description);
 
         viewHolder.ivImage.setImageResource(android.R.color.transparent);
-        Picasso.with(getContext()).load(image.url).into(viewHolder.ivImage);
+        Picasso.with(getContext()).load(image.url).placeholder(R.drawable.placeholder).into(viewHolder.ivImage);
 
         return convertView;
     }

@@ -1,5 +1,6 @@
 package com.iskcon.pb.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,9 +10,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.iskcon.pb.R;
+import com.iskcon.pb.fragments.AnnoucementsFragment;
 import com.iskcon.pb.fragments.DarshansFragment;
 import com.iskcon.pb.fragments.KirtansFragment;
 import com.iskcon.pb.fragments.LecturesFragment;
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         vpPager.setOffscreenPageLimit(3);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
-        getSupportActionBar().setLogo(R.drawable.iskcon_logo);
+        getSupportActionBar().setLogo(R.drawable.push_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -46,8 +49,19 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public class MediaPagerAdapter extends FragmentPagerAdapter {
-        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans"};
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            Intent i = new Intent(this, Settings.class);
+            startActivity(i);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public class MediaPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans", "Announcements"};
+        private int tabIcons[] = {R.drawable.ic_kirtan, R.drawable.ic_lecture, R.drawable.ic_darshan,R.drawable.ic_announcement};
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -61,20 +75,27 @@ public class MainActivity extends AppCompatActivity {
                 return new LecturesFragment();
             }  else if (position == 2) {
                 return new DarshansFragment();
-            } else {
+            } else if (position == 3) {
+                return new AnnoucementsFragment();
+            }
+            else {
                 return null;
             }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
         }
 
         @Override
         public int getCount() {
             return tabTitles.length;
         }
+
+        @Override
+        public int getPageIconResId(int i) {
+            return tabIcons[i];
+        }
+    }
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
 }

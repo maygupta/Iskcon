@@ -41,6 +41,7 @@ public class KirtansFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.media_list_layout, container, false);
+
         client = new AsyncHttpClient();
 
         // Get ListView object from xml
@@ -125,8 +126,6 @@ public class KirtansFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // perform query here
-//                filter(query);
                 return true;
             }
 

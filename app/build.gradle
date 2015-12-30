@@ -8,8 +8,8 @@ android {
         applicationId "com.iskcon.pb"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 19
-        versionName "19.0"
+        versionCode 21
+        versionName "1.0"
     }
     signingConfigs {
         release {
@@ -40,4 +40,5 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.parse:parse-android:1.+'
     compile 'com.parse.bolts:bolts-android:1.+'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

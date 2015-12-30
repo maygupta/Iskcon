@@ -15,4 +15,10 @@
         android:orderInCategory="1"
         android:title="Settings"
         android:showAsAction="always"/>
+
+    <!--<item-->
+        <!--android:id="@+id/live"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="Live Darshan"-->
+        <!--android:showAsAction="always"/>-->
 </menu>

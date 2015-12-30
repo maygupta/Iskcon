@@ -63,7 +63,7 @@
         <service android:name="com.parse.PushService" />
 
         <receiver
-            android:name="com.iskcon.pb.CustomReceiver"
+            android:name=".CustomReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
@@ -78,7 +78,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-<!--               IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
+                <!-- IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
                 <category android:name="com.iskcon.pb" />
             </intent-filter>
         </receiver>
@@ -86,6 +86,10 @@
         <activity
             android:name=".activities.Settings"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".activities.LiveDarshanActivity"
+            android:label="@string/title_activity_live_darshan" >
         </activity>
     </application>
 

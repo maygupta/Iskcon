@@ -2,14 +2,11 @@ package com.iskcon.pb.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
@@ -18,7 +15,6 @@ import android.widget.ImageView;
 
 import com.iskcon.pb.R;
 import com.iskcon.pb.utils.TouchImageView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -38,20 +34,21 @@ public class FullDarshanDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_darshan_view_layout);
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.string.red))));
+        getSupportActionBar().hide();
 
         ivFullImage = (TouchImageView) findViewById(R.id.ivFullImage);
-        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("url"))).into(ivFullImage, new Callback() {
-            @Override
-            public void onSuccess() {
-                setupShareIntent();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        Picasso.with(this).load(Uri.parse(getIntent().getStringExtra("url"))).into(ivFullImage);
+//                , new Callback() {
+//            @Override
+//            public void onSuccess() {
+//                setupShareIntent();
+//            }
+//
+//            @Override
+//            public void onError() {
+//
+//            }
+//        });
     }
 
     @Override
@@ -59,10 +56,10 @@ public class FullDarshanDetailsActivity extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_darshan_detail, menu);
-        MenuItem item = menu.findItem(R.id.menu_item_share);
+//        MenuItem item = menu.findItem(R.id.menu_item_share);
         // Fetch reference to the share action provider
-        miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        setupShareIntent();
+//        miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+//        setupShareIntent();
         return true;
     }
 
@@ -74,9 +71,9 @@ public class FullDarshanDetailsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -52,7 +52,7 @@ public class LiveDarshanActivity extends YouTubeBaseActivity implements YouTubeP
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
         if (!wasRestored) {
-            youTubePlayer.cueVideo("oqP6Ev3bLh8");
+            youTubePlayer.cueVideo("ZhZj-LmOVgM");
 //            https://www.youtube.com/watch?v=oqP6Ev3bLh8
         }
     }

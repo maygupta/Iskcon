@@ -55,12 +55,11 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, Settings.class);
             startActivity(i);
             return true;
+        } else if (item.getItemId() == R.id.live) {
+            Intent i = new Intent(this, LiveDarshanActivity.class);
+            startActivity(i);
+            return true;
         }
-//        } else if (item.getItemId() == R.id.live) {
-//            Intent i = new Intent(this, LiveDarshanActivity.class);
-//            startActivity(i);
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -16,9 +16,9 @@
         android:title="Settings"
         android:showAsAction="always"/>
 
-    <!--<item-->
-        <!--android:id="@+id/live"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="Live Darshan"-->
-        <!--android:showAsAction="always"/>-->
+    <item
+        android:id="@+id/live"
+        android:orderInCategory="100"
+        android:title="Videos"
+        android:showAsAction="always"/>
 </menu>

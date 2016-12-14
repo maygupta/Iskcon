@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class MediaPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
-        private String tabTitles[] = {"Kirtans", "Lectures", "Darshans", "Announcements"};
-        private int tabIcons[] = {R.drawable.ic_kirtan, R.drawable.ic_lecture, R.drawable.ic_darshan,R.drawable.ic_announcement};
+        private String tabTitles[] = {"Darshans", "Lectures", "Kirtans", "Announcements"};
+        private int tabIcons[] = {R.drawable.ic_darshan, R.drawable.ic_lecture,R.drawable.ic_kirtan ,R.drawable.ic_announcement};
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if ( position == 0) {
-                return new KirtansFragment();
+                return new DarshansFragment();
             } else if (position == 1) {
                 return new LecturesFragment();
             }  else if (position == 2) {
-                return new DarshansFragment();
+                return new KirtansFragment();
             } else if (position == 3) {
                 return new AnnoucementsFragment();
             }

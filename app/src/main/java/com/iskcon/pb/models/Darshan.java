@@ -8,8 +8,8 @@ import java.util.Date;
 /**
  * Created by maygupta on 10/21/15.
  */
-@ParseClassName("Darshan")
-public class Darshan extends ParseObject {
+
+public class Darshan {
     public String url;
     public String description;
     public Date createdAt;
@@ -17,18 +17,18 @@ public class Darshan extends ParseObject {
     public Darshan(){}
 
     public String getUrl() {
-        return getString("url");
+        return this.url;
     }
 
     public String getDescription() {
-        return getString("description");
+        return this.description;
     }
 
     public Darshan(String url, String description) {
         this.url = url;
         this.description = description;
-        put("url", url);
-        put("description", description);
-        pinInBackground();
+//        put("url", url);
+//        put("description", description);
+//        pinInBackground();
     }
 }

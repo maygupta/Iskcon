@@ -16,18 +16,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.iskcon.pb.R;
 import com.iskcon.pb.activities.MediaDetailActivity;
 import com.iskcon.pb.adapters.MediaAdapter;
+import com.iskcon.pb.models.Darshan;
 import com.iskcon.pb.models.Media;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class KirtansFragment extends Fragment {
@@ -63,26 +72,29 @@ public class KirtansFragment extends Fragment {
     }
 
     public void populateKirtans() {
-        ParseQuery<Media> query = ParseQuery.getQuery(Media.class);
-        query.whereEqualTo("type", "kirtan");
         if(!isNetworkAvailable()) {
-            query.fromLocalDatastore();
-            query.orderByDescending("createdAt");
-            query.whereExists("author_image_url");
+            Toast.makeText(getContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+            return;
         }
-        query.findInBackground(new FindCallback<Media>() {
+
+        client.get("http://footsteps.herokuapp.com/medias?category=kirtan", null , new JsonHttpResponseHandler(){
             @Override
-            public void done(List<Media> objects, ParseException e) {
-                for (Media object : objects) {
-                    Media media = new Media(object.getString("name"),
-                            object.getString("author"),
-                            object.getString("url"),
-                            object.getString("type"),
-                            object.getString("author_image_url"));
-                    originalKirtans.add(media);
-                    kirtanAdapter.add(media);
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject mediaJSON = response.getJSONObject(i);
+                        Media media = new Media(mediaJSON.getString("name"),
+                                mediaJSON.getString("author"),
+                                mediaJSON.getString("url"),
+                                mediaJSON.getString("category"),
+                                mediaJSON.getString("author_image_url"));
+                        originalKirtans.add(media);
+                        kirtanAdapter.add(media);
+                    }
+                    kirtanAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), "Unable to load Kirtans!", Toast.LENGTH_LONG).show();
                 }
-                kirtanAdapter.notifyDataSetChanged();
             }
         });
 

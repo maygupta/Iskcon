@@ -20,7 +20,6 @@ public class MediaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ParseObject.registerSubclass(Media.class);
-        ParseObject.registerSubclass(Darshan.class);
         ParseObject.registerSubclass(Announcement.class);
         Parse.enableLocalDatastore(this);
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
